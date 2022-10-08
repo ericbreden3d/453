@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
     // all to one reduce
     mask = 0;
-    for (int i = 0; i < d - 1; i++) {
+    for (int i = 0; i < d; i++) {
         int op = pow(2, i);
         if ((this_rank & mask) == 0) {
             if ((this_rank & op) != 0) {
