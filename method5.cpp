@@ -73,11 +73,12 @@ int main(int argc, char *argv[])
 
         // cout << "Serial result: " << correct_result << " Distributed result: " << result << endl;
     }
-    cout << "this rank: " << this_rank << endl;
+
     // one to all
     int d = log2(num_procs);
     int mask = pow(2, d) - 1;
     for (int i = d - 1; i >= d - 1; i--) {
+        cout << "OUTER loop" << endl;
         int op = pow(2, i);
         mask = (mask ^ op);
         int iter = d - i;
