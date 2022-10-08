@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
                 cout << this_rank << " receive from " << src << endl;
                 MPI_Status status;
                 arr = new int[load_size];
-                // MPI_Recv(arr, load_size, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
+                MPI_Recv(arr, load_size, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
                 // get sum
             }
         }
