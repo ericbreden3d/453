@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
         int iter = d - i;
         int load_size = n / pow(2, iter);
         if ((this_rank & mask) == 0) {
-            cout << this_rank << " at outer loop" << endl;
+            // cout << this_rank << " at outer loop" << endl;
             if ((this_rank & op) == 0) {
                 int dest = (this_rank ^ op);
                 // cout << this_rank << " send to " << dest << endl;
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 
     cout << "Rank: " << this_rank << " ";
     for (int i = 0; i < sizeof(arr+ind)/sizeof(int); i++) {
-        cout << arr[i] << " ";
+        cout << (arr+ind)[i] << " ";
     }
 
    
