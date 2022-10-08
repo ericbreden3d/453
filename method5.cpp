@@ -16,8 +16,6 @@ int main(int argc, char *argv[])
 
     // make sure n is power of 2
     double test = log2(n);
-    cout << test << " " << floor(test) << endl;
-    cout << test - floor(test) << endl;
     if (test - floor(test) != 0) {
         cout << "Please pass power-of-2 input" << endl;
         return 0;
@@ -29,10 +27,14 @@ int main(int argc, char *argv[])
     int sub_size = n / num_procs;
     int remainder = n % num_procs;
 
+    // each process has dyn arr and partition index
+    int arr*;
+    int ind = 0;
+
     if (this_rank == 0)
     {
         // create and fill array with random values [-1,1]
-        int arr[n] = {};
+        arr = new int[n];
         int correct_result = 0;
         for (int i = 0; i < n; i++)
         {
@@ -72,25 +74,33 @@ int main(int argc, char *argv[])
         // cout << "Serial result: " << correct_result << " Distributed result: " << result << endl;
     }
 
-    int arr_size = n - remainder - (this_rank * sub_size);
-    vector<int> arr(arr_size, 0);
-    MPI_Status status;
-
     // one to all
     int d = log2(num_procs);
     int mask = pow(2, d) - 1;
     for (int i = d - 1; i >= 0; i--) {
         int op = pow(2, i);
         mask = (mask ^ op);
+        int iter = d - i;
+        int load_Size = n / pow(2, iter);
         if (this_rank & mask == 0) {
             if (this_rank & op == 0) {
                 int dest = (this_rank ^ op);
-                // MPI_Isend(&sum, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, &req);
+                MPI_Request req;
+                MPI_Isend(&arr + div, load_Size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
+                div += load_Size;
             } else {
-                int msg_source = (this_rank ^ op);
-                // MPI_Recv(&arr[0], arr_size, MPI_INT, this_rank - 1, 0, MPI_COMM_WORLD, &status);
+                int src = (this_rank ^ op);
+                MPI_Status status;
+                arr = new int[load_size];
+                MPI_Recv(arr, load_size, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
+                // get sum
             }
         }
+    }
+
+    cout << "Rank: " << this_rank << " ";
+    for (int i = 0; i < sizeof(arr+div)/sizeof(int); i++) {
+        cout << arr[i] << " ";
     }
 
    
