@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     int remainder = n % num_procs;
 
     // make sure num_procs is power of 2
-    double test = log2(n);
+    double test = log2(num_procs);
     if (test - floor(test) != 0) {
         cout << "Please pass power-of-2 input" << endl;
         return 0;
