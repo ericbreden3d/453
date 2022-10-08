@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
     // each process has dyn arr and partition index
     int* arr;
     int ind = 0;
+    int size;
 
     if (this_rank == 0)
     {
@@ -91,19 +92,21 @@ int main(int argc, char *argv[])
                 MPI_Request req;
                 MPI_Isend(arr + ind, load_size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
                 ind += load_size;
+                size = load_size;
             } else {
                 int src = (this_rank ^ op);
                 // cout << this_rank << " receive from " << src << endl;
                 MPI_Status status;
                 arr = new int[load_size];
                 MPI_Recv(arr, load_size, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
+                size = load_Size;
                 // get sum
             }
         }
     }
 
     cout << "Rank: " << this_rank << " ";
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < size; i++) {
         cout << (arr+ind)[i] << " ";
     }
 
