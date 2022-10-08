@@ -87,13 +87,13 @@ int main(int argc, char *argv[])
             cout << this_rank << " at outer loop" << endl;
             if ((this_rank & op) == 0) {
                 int dest = (this_rank ^ op);
-                cout << this_rank << " send to " << dest << endl;
+                // cout << this_rank << " send to " << dest << endl;
                 MPI_Request req;
                 MPI_Isend(arr + ind, load_size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
                 ind += load_size;
             } else {
                 int src = (this_rank ^ op);
-                cout << this_rank << " receive from " << src << endl;
+                // cout << this_rank << " receive from " << src << endl;
                 MPI_Status status;
                 arr = new int[load_size];
                 MPI_Recv(arr, load_size, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
