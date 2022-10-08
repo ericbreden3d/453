@@ -14,12 +14,6 @@ int main(int argc, char *argv[])
     int max_subarr;
     srand(time(NULL));
 
-    MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &this_rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
-    int sub_size = n / num_procs;
-    int remainder = n % num_procs;
-
     // make sure n is power of 2
     double test = log2(n);
     cout << test << " " << floor(test) << endl;
@@ -28,7 +22,12 @@ int main(int argc, char *argv[])
         cout << "Please pass power-of-2 input" << endl;
         return 0;
     }
-    return 0;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &this_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
+    int sub_size = n / num_procs;
+    int remainder = n % num_procs;
 
     if (this_rank == 0)
     {
