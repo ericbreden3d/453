@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     // make sure n is power of 2
     double test = log2(n);
     if (test - floor(test) != 0) {
-        return
+        return;
     }
 
     if (this_rank == 0)
