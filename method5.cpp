@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
     double test = log2(n);
     cout << test << " " << floor(test) << endl;
     if (test - floor(test) != 0) {
+        cout << "Please pass power-of-2 input"
         return 0;
     }
 
