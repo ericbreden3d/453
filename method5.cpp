@@ -78,11 +78,11 @@ int main(int argc, char *argv[])
     int d = log2(num_procs);
     int mask = pow(2, d) - 1;
     for (int i = d - 1; i >= d - 1; i--) {
-        cout << "OUTER loop" << endl;
         int op = pow(2, i);
         mask = (mask ^ op);
         int iter = d - i;
         int load_size = n / pow(2, iter);
+        cout << "&: " << this_rank & mask << endl;
         if (this_rank & mask == 0) {
             cout << this_rank << " at outer loop" << endl;
             if (this_rank & op == 0) {
