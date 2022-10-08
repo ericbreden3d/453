@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 
         // cout << "Serial result: " << correct_result << " Distributed result: " << result << endl;
     }
-
+    cout << "this rank: " << this_rank << endl;
     // one to all
     int d = log2(num_procs);
     int mask = pow(2, d) - 1;
