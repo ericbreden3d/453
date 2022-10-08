@@ -104,12 +104,13 @@ int main(int argc, char *argv[])
             }
         }
     }
-    cout << "hi" << endl;
-    if (this_rank == 0) {
-        cout << "Rank: " << this_rank << " ";
+
+    if (this_rank == 2) {
+        cout << "Rank: " << this_rank << " -> ";
         for (int i = 0; i < size; i++) {
-            cout << *(arr+i) << " ";
+            cout << *(arr+ind+i) << " ";
         }
+        cout << endl;
     }
 
    
