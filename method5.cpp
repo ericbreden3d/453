@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
             correct_result += arr[i];
             cout << arr[i] << " ";
         }
+        cout << endl;
 
         // split into 2d array of subarrays
         // vector<vector<int>> subarrs(num_children, vector<int>());
@@ -105,7 +106,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    cout << "Rank: " << this_rank << " -> ";
+    cout << "\nRank: " << this_rank << " -> ";
     for (int i = 0; i < size; i++) {
         cout << *(arr+ind+i) << " ";
     }
