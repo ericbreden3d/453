@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     // one to all
     int d = log2(num_procs);
     int mask = pow(2, d) - 1;
-    for (int i = d - 1; i >= 0; i--) {
+    for (int i = d - 1; i >= d - 1; i--) {
         int op = pow(2, i);
         mask = (mask ^ op);
         int iter = d - i;
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
                 ind += load_size;
             } else {
                 int src = (this_rank ^ op);
-                cout << this_rank << " recive from " << src << endl;
+                cout << this_rank << " receive from " << src << endl;
                 MPI_Status status;
                 arr = new int[load_size];
                 MPI_Recv(arr, load_size, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
