@@ -85,11 +85,13 @@ int main(int argc, char *argv[])
         if (this_rank & mask == 0) {
             if (this_rank & op == 0) {
                 int dest = (this_rank ^ op);
+                cout << this_rank << " send to " << dest << endl;
                 MPI_Request req;
                 MPI_Isend(arr + ind, load_size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
                 ind += load_size;
             } else {
                 int src = (this_rank ^ op);
+                cout << this_rank << " recive from " << src << endl;
                 MPI_Status status;
                 arr = new int[load_size];
                 MPI_Recv(arr, load_size, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
