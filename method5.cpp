@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
         {
             arr[i] = 1 - rand() % 3;
             correct_result += arr[i];
+            cout << arr[i] << " " << endl;
         }
 
         // split into 2d array of subarrays
