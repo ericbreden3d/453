@@ -104,6 +104,7 @@ int main(int argc, char *argv[])
                 sum += recv;
             }
         }
+        mask = (mask ^ op);
     }
    
    if (this_rank == 0) {
