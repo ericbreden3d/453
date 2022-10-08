@@ -94,9 +94,11 @@ int main(int argc, char *argv[])
         if ((this_rank & mask) == 0) {
             if ((this_rank & op) != 0) {
                 int dest = (this_rank ^ op);
+                cout << this_rank << " sending to " << dest << endl;
                 MPI_Isend(&sum, 1, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
             } else {
                 int src = (this_rank ^ op);
+                cout << this_rank << " receiving from " << src << endl;
                 int recv;
                 MPI_Recv(&recv, 1, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
                 sum += recv;
