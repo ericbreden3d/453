@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     int remainder = n % num_procs;
 
     // each process has dyn arr and partition index
-    int arr*;
+    int* arr;
     int ind = 0;
 
     if (this_rank == 0)
