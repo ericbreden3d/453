@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     // make sure n is power of 2
     double test = log2(n);
     if (test - floor(test) != 0) {
-        return;
+        return 0;
     }
 
     if (this_rank == 0)
@@ -78,15 +78,16 @@ int main(int argc, char *argv[])
     int mask = pow(2, d) - 1;
     for (int i = d - 1; i >= 0; i--)
     {
-        mask = (mask ^ pow(2, i));
+        int op = pow(2, i);
+        mask = (mask ^ op);
         if (this_rank & mask) == 0
         {
-            if (this_rank & pow(2, i)) == 0
+            if (this_rank & op) == 0
             {
-                int dest = (this_rank ^ pow(2, i));
+                int dest = (this_rank ^ op);
                 // MPI_Isend(&sum, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, &req);
             } else {
-                msg_source = (this_rank ^ pow(2, i))
+                msg_source = (this_rank ^ op)
                 MPI_Recv(&arr[0], arr_size, MPI_INT, this_rank - 1, 0, MPI_COMM_WORLD, &status);
             }
         }
