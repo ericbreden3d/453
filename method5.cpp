@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
                 MPI_Status status;
                 arr = new int[load_size];
                 MPI_Recv(arr, load_size, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
-                size = load_Size;
+                size = load_size;
                 // get sum
             }
         }
