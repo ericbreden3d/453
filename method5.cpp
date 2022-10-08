@@ -6,6 +6,14 @@
 #include <cmath>
 using namespace std;
 
+int sum_arr(int* arr, int size) {
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum += arr[i];
+    }
+    return sum;
+}
+
 int main(int argc, char *argv[])
 {
     int num_procs;
@@ -43,41 +51,14 @@ int main(int argc, char *argv[])
             correct_result += arr[i];
             cout << arr[i] << " ";
         }
-        cout << endl;
-
-        // split into 2d array of subarrays
-        // vector<vector<int>> subarrs(num_children, vector<int>());
-        // int cur_arr = 0;
-        // for (int i = 0; i < n; i++) {
-        //     subarrs[cur_arr].push_back(arr[i]);
-        //     cur_arr++;
-        //     if (cur_arr == num_children) {
-        //         cur_arr = 0;
-        //     }
-        // }
-
-        // MPI_Request req;
-        // MPI_Isend(arr, n - root_sub_size, MPI_INT, 1, 0, MPI_COMM_WORLD, &req);
-
-        // int sum = 0;
-        // for (int num : subarr)
-        // {
-        //     sum += num;
-        // }
-
-        // wait 1st ring to complete before starting next
-        // MPI_Barrier(MPI_COMM_WORLD);
-
-        // MPI_Isend(&sum, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, &req);
-
-        // int result;
-        // MPI_Status status;
-        // MPI_Recv(&result, 1, MPI_INT, num_procs - 1, 0, MPI_COMM_WORLD, &status);
-
-        // cout << "Serial result: " << correct_result << " Distributed result: " << result << endl;
+        cout << "Serial result: " << correct_result << endl;
     }
 
-    // one to all
+    // MPI structs for send and receive calls
+    MPI_Request req;
+    MPI_Status status;
+
+    // one to all broadcast
     int d = log2(num_procs);
     int mask = pow(2, d) - 1;
     for (int i = d - 1; i >= 0; i--) {
@@ -90,29 +71,42 @@ int main(int argc, char *argv[])
             if ((this_rank & op) == 0) {
                 int dest = (this_rank ^ op);
                 // cout << this_rank << " send to " << dest << endl;
-                MPI_Request req;
                 MPI_Isend(arr + ind, load_size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
                 ind += load_size;
                 size = load_size;
             } else {
                 int src = (this_rank ^ op);
                 // cout << this_rank << " receive from " << src << endl;
-                MPI_Status status;
                 arr = new int[load_size];
                 MPI_Recv(arr, load_size, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
                 size = load_size;
-                // get sum
             }
         }
     }
 
-    cout << "\nRank: " << this_rank << " -> ";
-    for (int i = 0; i < size; i++) {
-        cout << *(arr+ind+i) << " ";
-    }
-    cout << endl;
+    // compute sums
+    int sum = sum_arr(arr + ind, size);
 
+    // all to one reduce
+    mask = 0;
+    for (int i = 0; i < d - 1; i++) {
+        int op = pow(2, i);
+        if ((this_rank & mask) == 0) {
+            if ((this_rank & op) != 0) {
+                int dest = (this_rank ^ op);
+                MPI_Isend(&sum, 1, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
+            } else {
+                int src = (this_rank ^ op);
+                int recv;
+                MPI_Recv(&recv, 1, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
+                sum += recv;
+            }
+        }
+    }
    
+   if (this_rank == 0) {
+    cout << "Distributed result: " << sum << endl;
+   }
 
     MPI_Finalize();
 }
