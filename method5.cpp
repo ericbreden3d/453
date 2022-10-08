@@ -86,8 +86,8 @@ int main(int argc, char *argv[])
             if (this_rank & op == 0) {
                 int dest = (this_rank ^ op);
                 MPI_Request req;
-                MPI_Isend(arr + div, load_Size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
-                div += load_Size;
+                MPI_Isend(arr + ind, load_size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
+                ind += load_Size;
             } else {
                 int src = (this_rank ^ op);
                 MPI_Status status;
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
     }
 
     cout << "Rank: " << this_rank << " ";
-    for (int i = 0; i < sizeof(arr+div)/sizeof(int); i++) {
+    for (int i = 0; i < sizeof(arr+ind)/sizeof(int); i++) {
         cout << arr[i] << " ";
     }
 
