@@ -101,10 +101,10 @@ int main(int argc, char *argv[])
         }
     }
 
-    // cout << "Rank: " << this_rank << " ";
-    // for (int i = 0; i < sizeof(arr+ind)/sizeof(int); i++) {
-    //     cout << arr[i] << " ";
-    // }
+    cout << "Rank: " << this_rank << " ";
+    for (int i = 0; i < sizeof(arr+ind)/sizeof(int); i++) {
+        cout << arr[i] << " ";
+    }
 
    
 
