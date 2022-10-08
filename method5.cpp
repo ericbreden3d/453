@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
                 int dest = (this_rank ^ op);
                 MPI_Request req;
                 MPI_Isend(arr + ind, load_size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
-                ind += load_Size;
+                ind += load_size;
             } else {
                 int src = (this_rank ^ op);
                 MPI_Status status;
