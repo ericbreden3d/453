@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     // one to all
     int d = log2(num_procs);
     int mask = pow(2, d) - 1;
-    for (int i = d - 1; i >= d - 1; i--) {
+    for (int i = d - 1; i >= 0; i--) {
         int op = pow(2, i);
         mask = (mask ^ op);
         int iter = d - i;
@@ -105,13 +105,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (this_rank == 2) {
-        cout << "Rank: " << this_rank << " -> ";
-        for (int i = 0; i < size; i++) {
-            cout << *(arr+ind+i) << " ";
-        }
-        cout << endl;
+    cout << "Rank: " << this_rank << " -> ";
+    for (int i = 0; i < size; i++) {
+        cout << *(arr+ind+i) << " ";
     }
+    cout << endl;
 
    
 
