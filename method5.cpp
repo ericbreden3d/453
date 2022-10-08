@@ -76,14 +76,11 @@ int main(int argc, char *argv[])
     // one to all
     int d = log2(num_procs);
     int mask = pow(2, d) - 1;
-    for (int i = d - 1; i >= 0; i--)
-    {
+    for (int i = d - 1; i >= 0; i--) {
         int op = pow(2, i);
         mask = (mask ^ op);
-        if (this_rank & mask) == 0
-        {
-            if (this_rank & op) == 0
-            {
+        if (this_rank & mask == 0) {
+            if (this_rank & op == 0) {
                 int dest = (this_rank ^ op);
                 // MPI_Isend(&sum, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, &req);
             } else {
