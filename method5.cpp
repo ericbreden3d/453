@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 
     // make sure n is power of 2
     double test = log2(n);
+    cout << test << " " << floor(test) << endl;
     if (test - floor(test) != 0) {
         return 0;
     }
@@ -84,8 +85,8 @@ int main(int argc, char *argv[])
                 int dest = (this_rank ^ op);
                 // MPI_Isend(&sum, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, &req);
             } else {
-                msg_source = (this_rank ^ op)
-                MPI_Recv(&arr[0], arr_size, MPI_INT, this_rank - 1, 0, MPI_COMM_WORLD, &status);
+                int msg_source = (this_rank ^ op);
+                // MPI_Recv(&arr[0], arr_size, MPI_INT, this_rank - 1, 0, MPI_COMM_WORLD, &status);
             }
         }
     }
