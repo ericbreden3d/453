@@ -81,12 +81,12 @@ int main(int argc, char *argv[])
         int op = pow(2, i);
         mask = (mask ^ op);
         int iter = d - i;
-        int load_Size = n / pow(2, iter);
+        int load_size = n / pow(2, iter);
         if (this_rank & mask == 0) {
             if (this_rank & op == 0) {
                 int dest = (this_rank ^ op);
                 MPI_Request req;
-                MPI_Isend(&arr + div, load_Size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
+                MPI_Isend(arr + div, load_Size, MPI_INT, dest, 0, MPI_COMM_WORLD, &req);
                 div += load_Size;
             } else {
                 int src = (this_rank ^ op);
