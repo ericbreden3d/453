@@ -23,10 +23,12 @@ int main(int argc, char *argv[])
     // make sure n is power of 2
     double test = log2(n);
     cout << test << " " << floor(test) << endl;
+    cout << test - floor(test) << endl;
     if (test - floor(test) != 0) {
         cout << "Please pass power-of-2 input" << endl;
         return 0;
     }
+    return 0;
 
     if (this_rank == 0)
     {
