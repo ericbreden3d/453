@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     // calculate each dimensions assignment num
     int dim_n[m] = {};
     for (int i = 0; i < m; i++) {
-        cur_n = i == 0 ? n : dim_n[i - 1];
+        int cur_n = i == 0 ? n : dim_n[i - 1];
         dim_n[i] = cur_n / dim_counts[i];
         cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
     }
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     int ind = 0;
     int size;
     MPI_Status status;
-    MPI_request req;
+    MPI_Request req;
 
     if (this_rank == 0)
     {
