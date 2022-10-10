@@ -8,7 +8,6 @@
 #include <algorithm>
 using namespace std;
 
-
 int sum_arr(int* arr, int size) {
     int sum = 0;
     for (int i = 0; i < size; i++) {
@@ -17,17 +16,11 @@ int sum_arr(int* arr, int size) {
     return sum;
 }
 
-int get_dim_count(int which_dim, int m, MPI_Comm comm) {
+void get_dim_counts(int m, MPI_Comm comm, int* dims_arr) {
     int dim_num;
-    int dims_arr[m];
     int periods[m];
     int coords[m];
     MPI_Cart_get(comm, m, dims_arr, periods, coords);
-    // for (int i = 0; i < m, i++) {
-    //     cout << dims[i] << " ";
-    // }
-    // cout << endl;
-    return dims_arr[which_dim-1];
 }
 
 int main(int argc, char *argv[])
@@ -61,14 +54,6 @@ int main(int argc, char *argv[])
     //     cout << " " << coords[i];
     // }              
     // cout << endl;
-    if (this_rank == 0) {
-        for (int i = 1; i <= m; i++) {
-            cout << "Dim " << i << " has " << get_dim_count(i, m, new_comm) << endl;
-        }
-    }
-
-    MPI_Finalize();
-    return 0;
 
     // each process has dyn arr and partition index
     int* arr;
@@ -77,6 +62,12 @@ int main(int argc, char *argv[])
 
     if (this_rank == 0)
     {
+        int dim_counts[m];
+        get_dim_counts(m, new_comm, dim_counts);
+        for (int i = 0; i < m; i++) {
+            cout << "Dim " << i+1 << " has " << dim_counts[i] << " processes\n";
+        }
+
         // create and fill array with random values [-1,1]
         arr = new int[n];
         int correct_result = 0;
@@ -87,6 +78,8 @@ int main(int argc, char *argv[])
         }
         cout << "Serial result: " << correct_result << endl;
     }
+
+
 
 
 
