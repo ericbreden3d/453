@@ -27,7 +27,7 @@ int get_dim_count(int which_dim, int m, MPI_Comm comm) {
     //     cout << dims[i] << " ";
     // }
     // cout << endl;
-    return dims_arr[which_dim-1]
+    return dims_arr[which_dim-1];
 }
 
 int main(int argc, char *argv[])
