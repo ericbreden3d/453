@@ -44,30 +44,31 @@ int main(int argc, char *argv[])
     MPI_Comm new_comm;
     MPI_Cart_create(MPI_COMM_WORLD, m, dims, periods, reorder, &new_comm);
 
-    // get proc info
+    // get new rank, cart coords, and amount of procs in each dim
     MPI_Comm_rank(new_comm, &this_rank);
-    int coords[2];
-    MPI_Cart_coords(new_comm, this_rank, m, coords);
+    int this_coord[2];
+    MPI_Cart_coords(new_comm, this_rank, m, this_coord);
+    int dim_counts[m];
+    get_dim_counts(m, new_comm, dim_counts);
 
-    // cout << "Rank " << this_rank << " has coords";
-    // for (int i = 0; i < m; i++) {
-    //     cout << " " << coords[i];
-    // }              
-    // cout << endl;
+    // calculate each dimensions assignment num
+    int dim_n[m] = {};
+    for (int i = 0; i < m; i++) {
+        cur_n = i == 0 ? n : dim_n[i - 1];
+        dim_n[i] = cur_n / dim_counts[i];
+        cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
+    }
 
+    // ** move to top
     // each process has dyn arr and partition index
     int* arr;
     int ind = 0;
     int size;
+    MPI_Status status;
+    MPI_request req;
 
     if (this_rank == 0)
     {
-        int dim_counts[m];
-        get_dim_counts(m, new_comm, dim_counts);
-        for (int i = 0; i < m; i++) {
-            cout << "Dim " << i+1 << " has " << dim_counts[i] << " processes\n";
-        }
-
         // create and fill array with random values [-1,1]
         arr = new int[n];
         int correct_result = 0;
@@ -76,8 +77,21 @@ int main(int argc, char *argv[])
             arr[i] = 1 - rand() % 3;
             correct_result += arr[i];
         }
+
+        // MPI_Isend(n / )
+
         cout << "Serial result: " << correct_result << endl;
     }
+
+    // get dest coord by checking for first dim that hasn't been fully sent to
+    int dest_coord[m];
+    copy(this_coord, this_coord + m, dest_coord);
+    for (int i = 0; i < m; i++) {
+        if (this_coord[i] + 1 < dim_counts[i]) {
+            dest_coord[i] = this_coord[i] + 1;
+            break;   
+        } 
+     }
 
 
 
