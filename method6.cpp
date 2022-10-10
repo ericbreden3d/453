@@ -17,6 +17,19 @@ int sum_arr(int* arr, int size) {
     return sum;
 }
 
+int get_dim_count(int which_dim, int m, MPI_Comm comm) {
+    int dim_num;
+    int dims_arr[m];
+    int periods[m];
+    int coords[m];
+    MPI_Cart_get(comm, m, dims_arr, periods, coords);
+    // for (int i = 0; i < m, i++) {
+    //     cout << dims[i] << " ";
+    // }
+    // cout << endl;
+    return dims_arr[which_dim-1]
+}
+
 int main(int argc, char *argv[])
 {
     int num_procs;
@@ -41,11 +54,16 @@ int main(int argc, char *argv[])
     int coords[2];
     MPI_Cart_coords(new_comm, this_rank, m, coords);
 
-    cout << "Rank " << this_rank << " has coords";
+    // cout << "Rank " << this_rank << " has coords";
+    // for (int i = 0; i < m; i++) {
+    //     cout << " " << coords[i];
+    // }              
+    // cout << endl;
+
     for (int i = 0; i < m; i++) {
-        cout << " " << coords[i];
-    }              
-    cout << endl;
+        cout << "Dim " << i << " has " << get_dim_count(i, m, new_comm) << endl;
+    }
+
     MPI_Finalize();
     return 0;
 
