@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 
 
 
-    delete[] arr;
+    // delete[] arr;
 
     MPI_Finalize();
 }
