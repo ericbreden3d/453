@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     int num_procs;
     int this_rank;
     int n = stoi(argv[1]);
+    int m = stoi(argv[2]);
     srand(time(NULL));
 
     MPI_Init(&argc, &argv);
@@ -29,9 +30,8 @@ int main(int argc, char *argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
     // make dims cl arg
-    int m = 3;
     int dims[m] = {};
-    MPI_Dims_create(num_procs, 3, dims);
+    MPI_Dims_create(num_procs, dim, dims);
     int periods[m];
     fill_n(periods, m, true);
     int reorder = true;
