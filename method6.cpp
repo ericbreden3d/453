@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     // make dims cl arg
     int dims[m] = {};
-    MPI_Dims_create(num_procs, dim, dims);
+    MPI_Dims_create(num_procs, m, dims);
     int periods[m];
     fill_n(periods, m, true);
     int reorder = true;
