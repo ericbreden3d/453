@@ -51,12 +51,13 @@ int main(int argc, char *argv[])
     int dim_counts[m];
     get_dim_counts(m, new_comm, dim_counts);
 
-    for (int i = 0; i < m; i++) {
-        cout << "Dim " << i+1 << ": " << dim_counts[i] << " processors\n";
-    }
-
     // calculate each dimensions assignment num
     if (this_rank == 0) {
+
+        for (int i = 0; i < m; i++) {
+            cout << "Dim " << i+1 << ": " << dim_counts[i] << " processors\n";
+        }
+
         int dim_n[m] = {};
         for (int i = 0; i < m; i++) {
             int cur_n = i == 0 ? n : dim_n[i - 1];
