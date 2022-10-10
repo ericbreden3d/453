@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
     int reorder = true;
     MPI_Comm new_comm;
     MPI_Cart_create(MPI_COMM_WORLD, m, dims, periods, reorder, &new_comm);
+
+    // get proc info
     MPI_Comm_rank(new_comm, &this_rank);
     int coords[2];
     MPI_Cart_coords(new_comm, this_rank, m, coords);
@@ -59,9 +61,10 @@ int main(int argc, char *argv[])
     //     cout << " " << coords[i];
     // }              
     // cout << endl;
-
-    for (int i = 0; i < m; i++) {
-        cout << "Dim " << i << " has " << get_dim_count(i, m, new_comm) << endl;
+    if (this_rank == 0) {
+        for (int i = 0; i < m; i++) {
+            cout << "Dim " << i << " has " << get_dim_count(i, m, new_comm) << endl;
+        }
     }
 
     MPI_Finalize();
