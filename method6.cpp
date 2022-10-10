@@ -52,12 +52,16 @@ int main(int argc, char *argv[])
     get_dim_counts(m, new_comm, dim_counts);
 
     // calculate each dimensions assignment num
-    int dim_n[m] = {};
-    for (int i = 0; i < m; i++) {
-        int cur_n = i == 0 ? n : dim_n[i - 1];
-        dim_n[i] = cur_n / dim_counts[i];
-        cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
+    if (this_rank == 0) {
+        int dim_n[m] = {};
+        for (int i = 0; i < m; i++) {
+            int cur_n = i == 0 ? n : dim_n[i - 1];
+            dim_n[i] = cur_n / dim_counts[i];
+            cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
+        }
     }
+
+    return 0;
 
     // ** move to top
     // each process has dyn arr and partition index
