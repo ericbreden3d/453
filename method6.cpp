@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     // }              
     // cout << endl;
     if (this_rank == 0) {
-        for (int i = 0; i < m; i++) {
+        for (int i = 1; i <= m; i++) {
             cout << "Dim " << i << " has " << get_dim_count(i, m, new_comm) << endl;
         }
     }
