@@ -25,8 +25,6 @@ int main(int argc, char *argv[])
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &this_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
-    int sub_size = n / num_procs;
-    int remainder = n % num_procs;
 
     // make sure num_procs is power of 2
     double test = log2(num_procs);
