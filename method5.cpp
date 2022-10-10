@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     }
 
     // MPI structs for send and receive calls
-    MPI_Request req;
+    MPI_Request req; 
     MPI_Status status;
 
     // one to all broadcast
