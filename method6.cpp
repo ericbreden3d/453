@@ -8,6 +8,14 @@
 #include <algorithm>
 using namespace std;
 
+// object for summing data and collecting at source process (reduce/gather)
+struct Reduce_Task {
+    int* coord;
+    char oper;
+
+    Reduce_Task(int* coord, char oper) : coord(coord), oper(oper) {}
+};
+
 int sum_arr(int* arr, int size) {
     int sum = 0;
     for (int i = 0; i < size; i++) {
@@ -29,13 +37,16 @@ int main(int argc, char *argv[])
     int this_rank;
     int n = stoi(argv[1]);
     int m = stoi(argv[2]);
-    srand(time(NULL));
+    int* arr;  // each process has dyn arr
+    MPI_Status status;
+    MPI_Request req;
+    vector<Reduce_Task> reversal_stack;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &this_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
-    // make dims cl arg
+    // create cartesian topology with m dimensions
     int dims[m] = {};
     MPI_Dims_create(num_procs, m, dims);
     int periods[m];
@@ -51,51 +62,31 @@ int main(int argc, char *argv[])
     int dim_counts[m];
     get_dim_counts(m, new_comm, dim_counts);
 
-    // debug
-    // cout << "Rank: " << this_rank << " at";
-    // for (int i = 0; i < m; i++) {
-    //     cout << " " << this_coord[i];
-    // }
-    // cout << endl;
-
-    // calculate number of elems to send/receive in each dimension
-    // debug
-    // for (int i = 0; i < m; i++) {
-    //     cout << "Dim " << i+1 << ": " << dim_counts[i] << " processors\n";
-    // }
-
+    // calc amount of elements that will be transfered at each dimension
     int dim_n[m] = {};
     for (int i = 0; i < m; i++) {
         int cur_n = i == 0 ? n : dim_n[i - 1];
         dim_n[i] = cur_n / dim_counts[i];
-        // debug
-        // cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
     }
 
-    // ** move to top
-    // each process has dyn arr
-    int* arr;
-    MPI_Status status;
-    MPI_Request req;
-
+    // root process creates and fills array with random values [-1,1]
     if (this_rank == 0)
     {
-        // create and fill array with random values [-1,1]
+        srand(time(NULL));
         arr = new int[n];
         int correct_result = 0;
         for (int i = 0; i < n; i++)
         {
             arr[i] = 1 - rand() % 3;
             correct_result += arr[i];
-            cout << arr[i] << " ";
         }
 
         cout << "Serial result: " << correct_result << endl;
     }
 
-    // reverse loop through coords nums to find src.
+    // reverse loop through coord nums to find src using first non-zero num
     // e.g. [1, 3, 0], 3 > 0, so receiving from [1, 2, 0] in 2nd iter
-    // also use dim_send to determine when this proc will send
+    // also fill dim_send[] with 1 or 0 for whether proc sends to that dim 
     int send_dim[m] = {};
     for (int i = m - 1; i >= 0; i--) {
         if (this_coord[i] > 0) {
@@ -114,6 +105,8 @@ int main(int argc, char *argv[])
             MPI_Recv(arr, amount, MPI_INT, src_rank, 0, new_comm, &status);
             // also note if the message needs to travel further
             send_dim[i] = (this_coord[i] < dim_counts[i]-1) ? 1 : 0;
+            // add opposite operation to stack for reduction later
+            reversal_stack.push_back(Reduce_Task(src_coord, "s"));
             break;    
         } else {
             // if trailing 0, then this proc sends to next dim during iter i
@@ -121,9 +114,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    // calc sum
-    // cout << "MY RANK IS " << this_rank << " at (" << this_coord[0] << ", " << this_coord[1] << ")" << endl;
-
+    // send using send_dim bool data gathered above
     for (int i = 0; i < m; i++) {
         if (send_dim[i]) {
             // increment the coord of this dim to get dest
@@ -140,7 +131,7 @@ int main(int argc, char *argv[])
             MPI_Isend(arr + dim_n[i], amount, MPI_INT, dest_rank, 0, new_comm, &req);
         }
     }
-
+    
     
     for (int i = 0; i < dim_n[m-1]; i++) {
         cout << arr[i] << " ";
