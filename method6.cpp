@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
             int amount = dim_n[i] * (dim_counts[i] - dest_coord[i]);
             cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") sending " << amount << " to (" << dest_coord[0] << ", " << dest_coord[1] << ")" << endl;
             // send to src_rank
-            MPI_Isend(arr + amount, cur_len - amount, MPI_INT, dest_rank, 0, new_comm, &req);
+            MPI_Isend(arr + dim_n[i], cur_len - amount, MPI_INT, dest_rank, 0, new_comm, &req);
             cur_len = amount;
         }
     }
