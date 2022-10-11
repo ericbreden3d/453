@@ -65,8 +65,6 @@ int main(int argc, char *argv[])
         // cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
     }
 
-    return 0;
-
     // ** move to top
     // each process has dyn arr and cur arr length
     int* arr;
