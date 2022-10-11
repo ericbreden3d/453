@@ -2,7 +2,7 @@
 #include <mpi.h>
 #include <time.h>
 #include <iostream>
-#include <vector>
+#include <stack>
 #include <string>
 #include <cmath>
 #include <algorithm>
@@ -10,10 +10,10 @@ using namespace std;
 
 // object for summing data and collecting at source process (reduce/gather)
 struct Reduce_Task {
-    int* coord;
+    int rank;
     char oper;
 
-    Reduce_Task(int* coord, char oper) : coord(coord), oper(oper) {}
+    Reduce_Task(int* coord, char oper) : rank(rank), oper(oper) {}
 };
 
 int sum_arr(int* arr, int size) {
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     int* arr;  // each process has dyn arr
     MPI_Status status;
     MPI_Request req;
-    vector<Reduce_Task> reversal_stack;
+    stack<Reduce_Task> reversal_stack;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &this_rank);
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
             // also note if the message needs to travel further
             send_dim[i] = (this_coord[i] < dim_counts[i]-1) ? 1 : 0;
             // add opposite operation to stack for reduction later
-            reversal_stack.push_back(Reduce_Task(src_coord, 's'));
+            reversal_stack.push(Reduce_Task(src_rank, 's'));
             break;    
         } else {
             // if trailing 0, then this proc sends to next dim during iter i
@@ -129,16 +129,29 @@ int main(int argc, char *argv[])
             // cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") sending " << amount << " to (" << dest_coord[0] << ", " << dest_coord[1] << ")" << endl;
             // send to src_rank
             MPI_Isend(arr + dim_n[i], amount, MPI_INT, dest_rank, 0, new_comm, &req);
+            // add opposite operation to stack for reduction later
+            reversal_stack.push(Reduce_Task(src_rank, 'r'));
         }
     }
     
-    
-    for (int i = 0; i < dim_n[m-1]; i++) {
-        cout << arr[i] << " ";
+    // calc sum -- last elem in dim_n has final amount of each proc
+    int sum = sum_arr(arr, dim_n[m - 1]);
+
+
+    while(!reversal_stack.empty()) {
+        Reduce_Task cur = reversal_stack.top();
+        if (cur.oper == 's') {
+            MPI_Isend(&sum, 1, MPI_INT, cur.rank, 0, new_comm, &req);
+        } else if (cur.oper == 'r') {
+            int recv_sum;
+            MPI_recv(&recv_sum, 1, MPI_INT, cur.rank, 0, new_comm, &status);
+            sum += recv_sum;
+        }
     }
-
-
-
+    
+    if (this_rank == 0) {
+        cout << "Distributed result: " << sum << endl;
+    }
 
     delete[] arr;
 
