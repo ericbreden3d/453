@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 
     if (n % num_procs != 0) {
         cout << "input size must be divisible by processor count" << endl;
+        return;
     }
 
     // init mpi and get info
