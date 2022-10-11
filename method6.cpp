@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
     }
 
     // calc sum
-    cout << "MY RANK IS " << this_rank << " at " << this_coord[0] << endl;
+    cout << "MY RANK IS " << this_rank << " at (" << this_coord[0] << ", " << this_coord[1] << ")" << endl;
 
     for (int i = 0; i < m; i++) {
         if (send_dim[i]) {
