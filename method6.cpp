@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
     }
     
     // calc sum -- last elem in dim_n has final amount of each proc
-    int sum = sum_arr(arr, dim_n[m - 1]);
+    // int sum = sum_arr(arr, dim_n[m - 1]);
     return 0;
 
     while(!reversal_stack.empty()) {
