@@ -51,11 +51,12 @@ int main(int argc, char *argv[])
     int dim_counts[m];
     get_dim_counts(m, new_comm, dim_counts);
 
-    cout << "Rank: " << this_rank << " at";
-    for (int i = 0; i < m; i++) {
-        cout << " " << this_coord[i];
-    }
-    cout << endl;
+    // debug
+    // cout << "Rank: " << this_rank << " at";
+    // for (int i = 0; i < m; i++) {
+    //     cout << " " << this_coord[i];
+    // }
+    // cout << endl;
 
     // calculate number of elems to send/receive in each dimension
     // debug
@@ -122,6 +123,7 @@ int main(int argc, char *argv[])
     }
 
     // calc sum
+    cout << "MY RANK IS " << this_rank << " at " << this_coord[0] << endl;
 
     for (int i = 0; i < m; i++) {
         if (send_dim[i]) {
