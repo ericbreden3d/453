@@ -73,10 +73,8 @@ int main(int argc, char *argv[])
     }
 
     // ** move to top
-    // each process has dyn arr and cur arr length
+    // each process has dyn arr
     int* arr;
-    int ind = 0;
-    int cur_len;
     MPI_Status status;
     MPI_Request req;
 
@@ -115,7 +113,6 @@ int main(int argc, char *argv[])
             // recv from src_rank
             cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") receiving " << amount << " to (" << src_coord[0] << ", " << src_coord[1] << ")" << endl;
             MPI_Recv(arr, amount, MPI_INT, src_rank, 0, new_comm, &status);
-            cur_len = amount;
             // also note if the message needs to travel further
             send_dim[i] = (this_coord[i] < dim_counts[i]-1) ? 1 : 0;
             break;    
@@ -142,7 +139,6 @@ int main(int argc, char *argv[])
             cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") sending " << amount << " to (" << dest_coord[0] << ", " << dest_coord[1] << ")" << endl;
             // send to src_rank
             MPI_Isend(arr + dim_n[i], amount, MPI_INT, dest_rank, 0, new_comm, &req);
-            cur_len = dim_n[i];
         }
     }
 
