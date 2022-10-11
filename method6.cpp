@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
             // send to src_rank
             MPI_Isend(arr + dim_n[i], amount, MPI_INT, dest_rank, 0, new_comm, &req);
             // add opposite operation to stack for reduction later
-            reversal_stack.push(Reduce_Task(src_rank, 'r'));
+            reversal_stack.push(Reduce_Task(dest_rank, 'r'));
         }
     }
     
