@@ -101,8 +101,9 @@ int main(int argc, char *argv[])
             int src_rank;
             MPI_Cart_rank(new_comm, src_coord, &src_rank);
             // recv from src_rank
-            // cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") receiving " << amount << " to (" << src_coord[0] << ", " << src_coord[1] << ")" << endl;
+            cout << "BEFORE: " << this_rank << endl;
             MPI_Recv(arr, amount, MPI_INT, src_rank, 0, new_comm, &status);
+            cout << "AFTER: " << this_rank << endl;
             // also note if the message needs to travel further
             send_dim[i] = (this_coord[i] < dim_counts[i]-1) ? 1 : 0;
             // add opposite operation to stack for reduction later
@@ -113,7 +114,7 @@ int main(int argc, char *argv[])
             send_dim[i] = 1;
         }
     }
-    cout << "RANK: " << this_rank << endl;
+
     // send using send_dim bool data gathered above
     for (int i = 0; i < m; i++) {
         if (send_dim[i]) {
@@ -126,7 +127,6 @@ int main(int argc, char *argv[])
             MPI_Cart_rank(new_comm, dest_coord, &dest_rank);
             // calculate amount to send such that keeping cur_len/num_procs in dim
             int amount = dim_n[i] * (dim_counts[i] - dest_coord[i]);
-            // cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") sending " << amount << " to (" << dest_coord[0] << ", " << dest_coord[1] << ")" << endl;
             // send to src_rank
             MPI_Isend(arr + dim_n[i], amount, MPI_INT, dest_rank, 0, new_comm, &req);
             // add opposite operation to stack for reduction later
