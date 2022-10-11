@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     int dim_counts[m];
     get_dim_counts(m, new_comm, dim_counts);
 
-    cout << "Rank: " < this_rank << " at";
+    cout << "Rank: " << this_rank << " at";
     for (int i = 0; i < m; i++) {
         cout << " " << this_coord[i];
     }
