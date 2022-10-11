@@ -146,6 +146,7 @@ int main(int argc, char *argv[])
             MPI_Recv(&recv_sum, 1, MPI_INT, cur.rank, 0, new_comm, &status);
             sum += recv_sum;
         }
+        reversal_stack.pop();
     }
     
     if (this_rank == 0) {
