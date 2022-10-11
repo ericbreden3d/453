@@ -113,6 +113,7 @@ int main(int argc, char *argv[])
             int src_rank;
             MPI_Cart_rank(new_comm, src_coord, &src_rank);
             // recv from src_rank
+            cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") receiving " << amount << " to (" << src_coord[0] << ", " src[1] << ")" << endl;
             MPI_Recv(arr, amount, MPI_INT, src_rank, 0, new_comm, &status);
             cur_len = amount;
             break;    
