@@ -114,6 +114,8 @@ int main(int argc, char *argv[])
         }
     }
 
+    return 0;
+
     // send using send_dim bool data gathered above
     for (int i = 0; i < m; i++) {
         if (send_dim[i]) {
