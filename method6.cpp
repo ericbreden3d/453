@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
             src_coord[i]--;
             int src_rank;
             MPI_Cart_rank(new_comm, src_coord, &src_rank);
-            MPI_Recv(arr, amount, MPI_INT, src_coord, 0, new_comm, &status);
+            MPI_Recv(arr, amount, MPI_INT, src_rank, 0, new_comm, &status);
             cur_len = amount;
             break;    
         } else {
