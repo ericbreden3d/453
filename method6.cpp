@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
             // also note if the message needs to travel further
             send_dim[i] = (this_coord[i] < dim_counts[i]-1) ? 1 : 0;
             // add opposite operation to stack for reduction later
-            reversal_stack.push_back(Reduce_Task(src_coord, "s"));
+            reversal_stack.push_back(Reduce_Task(src_coord, 's'));
             break;    
         } else {
             // if trailing 0, then this proc sends to next dim during iter i
