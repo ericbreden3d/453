@@ -116,6 +116,8 @@ int main(int argc, char *argv[])
             cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") receiving " << amount << " to (" << src_coord[0] << ", " << src_coord[1] << ")" << endl;
             MPI_Recv(arr, amount, MPI_INT, src_rank, 0, new_comm, &status);
             cur_len = amount;
+            // also note if the message needs to travel further
+            send_dim[i] = (this_coord[i] < dim_counts[i]-1) ? 1 : 0;
             break;    
         } else {
             // if trailing 0, then this proc sends to next dim during iter i
@@ -139,7 +141,7 @@ int main(int argc, char *argv[])
             int amount = dim_n[i] * (dim_counts[i] - dest_coord[i]);
             cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") sending " << amount << " to (" << dest_coord[0] << ", " << dest_coord[1] << ")" << endl;
             // send to src_rank
-            MPI_Isend(arr + dim_n[i], cur_len - dim_n[i], MPI_INT, dest_rank, 0, new_comm, &req);
+            MPI_Isend(arr + dim_n[i], amount, MPI_INT, dest_rank, 0, new_comm, &req);
             cur_len = dim_n[i];
         }
     }
