@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     // calc sum
 
     for (int i = 0; i < m; i++) {
-        send_dim[i] == 1 {
+        if (send_dim[i] == 1) {
             int amount = dim_n[i];
             int dest_coord[m];
             copy(this_coord, this_coord + m, dest_coord);
