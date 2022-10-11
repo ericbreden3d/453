@@ -136,14 +136,14 @@ int main(int argc, char *argv[])
             MPI_Cart_rank(new_comm, dest_coord, &dest_rank);
             // calculate amount to send such that keeping cur_len/num_procs in dim
             int amount = dim_n[i] * (dim_counts[i] - dest_coord[i]);
-            cout << this_rank << " sending " << amount << " to " << dest_rank << endl;
+            cout << "(" <<this_coord[0] << ", " << this_coord[1] << ") sending " << amount << " to (" << dest_coord[0] << ")" << endl;
             // send to src_rank
             MPI_Isend(arr + amount, cur_len - amount, MPI_INT, dest_rank, 0, new_comm, &req);
             cur_len = amount;
         }
     }
 
-    cout << "Rank: " << this_rank << " completed \n";
+    // cout << "Rank: " << this_rank << " completed \n";
 
     delete[] arr;
 
