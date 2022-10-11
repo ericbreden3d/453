@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     for (int i = m - 1; i >= 0; i--) {
         if (this_coord[i] > 0) {
             // create array to hold size calculated previously for this dim
-            int amount = dim_n[i];
+            int amount = dim_n[i] * (dim_counts[i] - this_coord[i]);
             arr = new int[amount];
             // create copy of coord with this dim - 1 and recv from this src
             int src_coord[m];
@@ -117,8 +117,9 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < m; i++) {
         if (send_dim[i] == 1) {
-            int amount = dim_n[i];
+            int amount = dim_n[i] * (dim_counts[i] - this_coord[i]);
             int dest_coord[m];
+
             copy(this_coord, this_coord + m, dest_coord);
             dest_coord[i]++;
             int dest_rank;
