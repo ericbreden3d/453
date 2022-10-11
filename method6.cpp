@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
         cout << "Distributed result: " << sum << endl;
     }
 
-    delete[] arr;
+    // delete[] arr;
 
     MPI_Finalize();
 }
