@@ -33,6 +33,7 @@ void get_dim_counts(int m, MPI_Comm comm, int* dims_arr) {
 
 int main(int argc, char *argv[])
 {
+    return 0;
     int num_procs;
     int this_rank;
     int n = stoi(argv[1]);
