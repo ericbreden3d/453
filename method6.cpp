@@ -16,6 +16,7 @@ struct Reduce_Task {
     Reduce_Task(int rank, char oper) : rank(rank), oper(oper) {}
 };
 
+// get sum of given array
 int sum_arr(int* arr, int size) {
     int sum = 0;
     for (int i = 0; i < size; i++) {
@@ -24,6 +25,7 @@ int sum_arr(int* arr, int size) {
     return sum;
 }
 
+// get # of processors in each dim - dims_arr is out param
 void get_dim_counts(int m, MPI_Comm comm, int* dims_arr) {
     int dim_num;
     int periods[m];
@@ -37,7 +39,7 @@ int main(int argc, char *argv[])
     int this_rank;
     int n = stoi(argv[1]);
     int m = stoi(argv[2]);
-    int* arr;  // each process has dyn arr
+    int* arr = nullptr;  // each process has dyn arr
     MPI_Status status;
     MPI_Request req;
     stack<Reduce_Task> reversal_stack;
@@ -160,7 +162,9 @@ int main(int argc, char *argv[])
         cout << "Distributed result: " << sum << endl;
     }
 
-    delete[] arr;
+    if (arr) {
+        delete[] arr;
+    }
 
     MPI_Finalize();
 }
