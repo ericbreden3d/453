@@ -113,9 +113,7 @@ int main(int argc, char *argv[])
             send_dim[i] = 1;
         }
     }
-
-    return 0;
-
+    cout << "RANK: " << this_rank << endl;
     // send using send_dim bool data gathered above
     for (int i = 0; i < m; i++) {
         if (send_dim[i]) {
