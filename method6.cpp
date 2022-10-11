@@ -126,7 +126,6 @@ int main(int argc, char *argv[])
             // calculate amount to send such that keeping cur_len/num_procs in dim
             int amount = dim_n[i] * (dim_counts[i] - dest_coord[i]);
             // send to src_rank
-            cout << "(" << this_coord[0] << ", " << this_coord[1] << endl;
             MPI_Isend(arr + dim_n[i], amount, MPI_INT, dest_rank, 0, new_comm, &req);
             // add opposite operation to stack for reduction later
             reversal_stack.push(Reduce_Task(dest_rank, 'r'));
