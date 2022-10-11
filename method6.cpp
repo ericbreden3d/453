@@ -135,23 +135,23 @@ int main(int argc, char *argv[])
     }
     
     // calc sum -- last elem in dim_n has final amount of each proc
-    int sum = sum_arr(arr, dim_n[m - 1]);
+    // int sum = sum_arr(arr, dim_n[m - 1]);
     return 0;
 
-    while(!reversal_stack.empty()) {
-        Reduce_Task cur = reversal_stack.top();
-        if (cur.oper == 's') {
-            MPI_Isend(&sum, 1, MPI_INT, cur.rank, 0, new_comm, &req);
-        } else if (cur.oper == 'r') {
-            int recv_sum;
-            MPI_Recv(&recv_sum, 1, MPI_INT, cur.rank, 0, new_comm, &status);
-            sum += recv_sum;
-        }
-    }
+    // while(!reversal_stack.empty()) {
+    //     Reduce_Task cur = reversal_stack.top();
+    //     if (cur.oper == 's') {
+    //         MPI_Isend(&sum, 1, MPI_INT, cur.rank, 0, new_comm, &req);
+    //     } else if (cur.oper == 'r') {
+    //         int recv_sum;
+    //         MPI_Recv(&recv_sum, 1, MPI_INT, cur.rank, 0, new_comm, &status);
+    //         sum += recv_sum;
+    //     }
+    // }
     
-    if (this_rank == 0) {
-        cout << "Distributed result: " << sum << endl;
-    }
+    // if (this_rank == 0) {
+    //     cout << "Distributed result: " << sum << endl;
+    // }
 
     // delete[] arr;
 
