@@ -87,6 +87,7 @@ int main(int argc, char *argv[])
         {
             arr[i] = 1 - rand() % 3;
             correct_result += arr[i];
+            cout << arr[i] << " ";
         }
 
         cout << "Serial result: " << correct_result << endl;

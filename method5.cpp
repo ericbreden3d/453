@@ -76,7 +76,6 @@ int main(int argc, char *argv[])
                 size = load_size;
             }
         }
-    }
 
     // compute sums
     int sum = sum_arr(arr + ind, size);
