@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     // get new rank, cart coords, and amount of procs in each dim
     MPI_Comm_rank(new_comm, &this_rank);
-    int this_coord[2];
+    int this_coord[m];
     MPI_Cart_coords(new_comm, this_rank, m, this_coord);
     int dim_counts[m];
     get_dim_counts(m, new_comm, dim_counts);
