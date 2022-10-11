@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     int* arr;  // each process has dyn arr
     MPI_Status status;
     MPI_Request req;
-    stack<Reduce_Task> reversal_stack;
+    // stack<Reduce_Task> reversal_stack;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &this_rank);
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
             // also note if the message needs to travel further
             send_dim[i] = (this_coord[i] < dim_counts[i]-1) ? 1 : 0;
             // add opposite operation to stack for reduction later
-            reversal_stack.push(Reduce_Task(src_rank, 's'));
+            // reversal_stack.push(Reduce_Task(src_rank, 's'));
             break;    
         } else {
             // if trailing 0, then this proc sends to next dim during iter i
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
             // send to src_rank
             MPI_Isend(arr + dim_n[i], amount, MPI_INT, dest_rank, 0, new_comm, &req);
             // add opposite operation to stack for reduction later
-            reversal_stack.push(Reduce_Task(dest_rank, 'r'));
+            // reversal_stack.push(Reduce_Task(dest_rank, 'r'));
         }
     }
     
