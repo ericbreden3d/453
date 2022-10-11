@@ -53,16 +53,16 @@ int main(int argc, char *argv[])
 
     // calculate number of elems to send/receive in each dimension
     // debug
-    for (int i = 0; i < m; i++) {
-        cout << "Dim " << i+1 << ": " << dim_counts[i] << " processors\n";
-    }
+    // for (int i = 0; i < m; i++) {
+    //     cout << "Dim " << i+1 << ": " << dim_counts[i] << " processors\n";
+    // }
 
     int dim_n[m] = {};
     for (int i = 0; i < m; i++) {
         int cur_n = i == 0 ? n : dim_n[i - 1];
         dim_n[i] = cur_n / dim_counts[i];
         // debug
-        cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
+        // cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
     }
 
     return 0;
