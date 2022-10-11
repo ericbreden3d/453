@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     if (n % num_procs != 0) {
         if (this_rank == 0) {
-            cout << "input size must be divisible by processor count" << endl;
+            cout << "\nInput size must be divisible by processor count\n" << endl;
         }
         return 0;
     }
