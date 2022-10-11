@@ -42,6 +42,11 @@ int main(int argc, char *argv[])
     MPI_Request req;
     stack<Reduce_Task> reversal_stack;
 
+    if (n % num_procs != 0) {
+        cout << "input size must be divisible by processor count" << endl;
+    }
+
+    // init mpi and get info
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &this_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
