@@ -89,8 +89,6 @@ int main(int argc, char *argv[])
             correct_result += arr[i];
         }
 
-        cur_len = n;
-
         cout << "Serial result: " << correct_result << endl;
     }
 
