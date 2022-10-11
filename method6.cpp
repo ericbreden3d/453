@@ -140,12 +140,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (this_coord[m-1] > 0) {
-        for (int i = 0; i < dim_n[m-1]; i++) {
-            cout << arr[i] << " ";
-        }
-        cout << endl;
+    
+    for (int i = 0; i < dim_n[m-1]; i++) {
+        cout << arr[i] << " ";
     }
+
 
 
 
