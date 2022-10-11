@@ -13,7 +13,7 @@ struct Reduce_Task {
     int rank;
     char oper;
 
-    Reduce_Task(int* coord, char oper) : rank(rank), oper(oper) {}
+    Reduce_Task(int rank, char oper) : rank(rank), oper(oper) {}
 };
 
 int sum_arr(int* arr, int size) {
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
             MPI_Isend(&sum, 1, MPI_INT, cur.rank, 0, new_comm, &req);
         } else if (cur.oper == 'r') {
             int recv_sum;
-            MPI_recv(&recv_sum, 1, MPI_INT, cur.rank, 0, new_comm, &status);
+            MPI_Recv(&recv_sum, 1, MPI_INT, cur.rank, 0, new_comm, &status);
             sum += recv_sum;
         }
     }
