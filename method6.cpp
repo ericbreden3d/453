@@ -9,12 +9,12 @@
 using namespace std;
 
 // object for summing data and collecting at source process (reduce/gather)
-struct Reduce_Task {
-    int rank;
-    char oper;
+// struct Reduce_Task {
+//     int rank;
+//     char oper;
 
-    Reduce_Task(int rank, char oper) : rank(rank), oper(oper) {}
-};
+//     Reduce_Task(int rank, char oper) : rank(rank), oper(oper) {}
+// };
 
 int sum_arr(int* arr, int size) {
     int sum = 0;
