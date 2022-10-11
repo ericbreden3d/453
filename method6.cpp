@@ -98,12 +98,14 @@ int main(int argc, char *argv[])
             // create array to hold size calculated previously for this dim
             int amount = dim_n[i] * (dim_counts[i] - this_coord[i]);
             arr = new int[amount];
-            // create copy of coord with this dim - 1 and recv from this src
+            // create copy of coord with this dim - 1
             int src_coord[m];
             copy(this_coord, this_coord + m, src_coord);
             src_coord[i]--;
+            // get rank of coord
             int src_rank;
             MPI_Cart_rank(new_comm, src_coord, &src_rank);
+            // recv from src_rank
             MPI_Recv(arr, amount, MPI_INT, src_rank, 0, new_comm, &status);
             cur_len = amount;
             break;    
@@ -116,14 +118,17 @@ int main(int argc, char *argv[])
     // calc sum
 
     for (int i = 0; i < m; i++) {
-        if (send_dim[i] == 1) {
-            int amount = dim_n[i] * (dim_counts[i] - this_coord[i]);
+        if (send_dim[i]) {
+            // increment the coord of this dim to get dest
             int dest_coord[m];
-
             copy(this_coord, this_coord + m, dest_coord);
             dest_coord[i]++;
+            // get rank from coors
             int dest_rank;
             MPI_Cart_rank(new_comm, dest_coord, &dest_rank);
+            // calculate amount to send such that keeping cur_len/num_procs in dim
+            int amount = dim_n[i] * (dim_counts[i] - dest_coord[i]);
+            // send to src_rank
             MPI_Isend(arr + amount, cur_len - amount, MPI_INT, dest_rank, 0, new_comm, &req);
             cur_len = amount;
         }
