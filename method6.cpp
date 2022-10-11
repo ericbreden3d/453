@@ -51,28 +51,27 @@ int main(int argc, char *argv[])
     int dim_counts[m];
     get_dim_counts(m, new_comm, dim_counts);
 
-    // calculate each dimensions assignment num
-    if (this_rank == 0) {
+    // calculate number of elems to send/receive in each dimension
+    // debug
+    for (int i = 0; i < m; i++) {
+        cout << "Dim " << i+1 << ": " << dim_counts[i] << " processors\n";
+    }
 
-        for (int i = 0; i < m; i++) {
-            cout << "Dim " << i+1 << ": " << dim_counts[i] << " processors\n";
-        }
-
-        int dim_n[m] = {};
-        for (int i = 0; i < m; i++) {
-            int cur_n = i == 0 ? n : dim_n[i - 1];
-            dim_n[i] = cur_n / dim_counts[i];
-            cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
-        }
+    int dim_n[m] = {};
+    for (int i = 0; i < m; i++) {
+        int cur_n = i == 0 ? n : dim_n[i - 1];
+        dim_n[i] = cur_n / dim_counts[i];
+        // debug
+        cout << "Dim " << i+1 << " will send/receive " << dim_n[i] << " elems\n";
     }
 
     return 0;
 
     // ** move to top
-    // each process has dyn arr and partition index
+    // each process has dyn arr and cur arr length
     int* arr;
     int ind = 0;
-    int size;
+    int cur_len;
     MPI_Status status;
     MPI_Request req;
 
@@ -87,26 +86,47 @@ int main(int argc, char *argv[])
             correct_result += arr[i];
         }
 
-        // MPI_Isend(n / )
-
         cout << "Serial result: " << correct_result << endl;
     }
 
-    // get dest coord by checking for first dim that hasn't been fully sent to
-    int dest_coord[m];
-    copy(this_coord, this_coord + m, dest_coord);
+    // reverse loop through coords nums to find src.
+    // e.g. [1, 3, 0], 3 > 0, so receiving from [1, 2, 0] in 2nd iter
+    // also use dim_send to determine when this proc will send
+    int send_dim[m] = {};
+    for (int i = m - 1; i >= 0; i--) {
+        if (this_coord[i] > 0) {
+            // create array to hold size calculated previously for this dim
+            int amount = dim_n[i];
+            arr = new int[amount];
+            // create copy of coord with this dim - 1 and recv from this src
+            int src_coord[m];
+            copy(this_coord, this_coord + m, src_coord);
+            src_coord[i]--;
+            MPI_Recv(arr, amount, MPI_INT, src_coord, 0, new_comm, &status);
+            cur_len = amount;
+            break;    
+        } else {
+            // if trailing 0, then this proc sends to next dim during iter i
+            send_dim[i] = 1;
+        }
+    }
+
+    // calc sum
+
     for (int i = 0; i < m; i++) {
-        if (this_coord[i] + 1 < dim_counts[i]) {
-            dest_coord[i] = this_coord[i] + 1;
-            break;   
-        } 
-     }
+        send_dim[i] == 1 {
+            int amount = dim_n[i];
+            int dest_coord[m];
+            copy(this_coord, this_coord + m, dest_coord);
+            dest_coord[i]++;
+            MPI_Isend(arr + amount, cur_len - amount, MPI_INT, dest_coord, 0, new_comm, &req);
+            cur_len = amount;
+        }
+    }
 
+    cout << "Rank: " << this_rank << " completed \n";
 
-
-
-
-    // delete[] arr;
+    delete[] arr;
 
     MPI_Finalize();
 }
