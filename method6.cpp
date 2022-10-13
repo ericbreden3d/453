@@ -1,4 +1,3 @@
-
 #include <mpi.h>
 #include <time.h>
 #include <iostream>
@@ -51,7 +50,7 @@ int main(int argc, char *argv[])
 
     if (n % num_procs != 0) {
         if (this_rank == 0) {
-            cout << "\nInput size must be divisible by processor count\n" << endl;
+            cout << "\nError: input size must be divisible by processor count\n" << endl;
         }
         return 0;
     }
@@ -96,7 +95,7 @@ int main(int argc, char *argv[])
 
     // reverse loop through coord nums to find src using first non-zero num
     // e.g. [1, 3, 0], 3 > 0, so receiving from [1, 2, 0] in 2nd iter
-    // also fill dim_send[] with 1 or 0 for whether proc sends to that dim 
+    // also fill dim_send[] with 1 or 0 for whether proc sends to that dim
     int send_dim[m] = {};
     for (int i = m - 1; i >= 0; i--) {
         if (this_coord[i] > 0) {
@@ -116,7 +115,7 @@ int main(int argc, char *argv[])
             send_dim[i] = (this_coord[i] < dim_counts[i]-1) ? 1 : 0;
             // add opposite operation to stack for reduction later
             reversal_stack.push(Reduce_Task(src_rank, 's'));
-            break;    
+            break;
         } else {
             // if trailing 0, then this proc sends to next dim during iter i
             send_dim[i] = 1;
@@ -141,7 +140,7 @@ int main(int argc, char *argv[])
             reversal_stack.push(Reduce_Task(dest_rank, 'r'));
         }
     }
-    
+
     // calc sum -- last elem in dim_n has final amount of each proc
     int sum = sum_arr(arr, dim_n[m - 1]);
 
@@ -157,7 +156,7 @@ int main(int argc, char *argv[])
         }
         reversal_stack.pop();
     }
-    
+
     if (this_rank == 0) {
         cout << "Distributed result: " << sum << endl;
     }

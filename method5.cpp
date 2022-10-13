@@ -26,10 +26,17 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &this_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
-    // make sure num_procs is power of 2
+    // make sure num_procs is power of 2 and input divisible by num_procs
     double test = log2(num_procs);
     if (test - floor(test) != 0) {
-        cout << "Please pass power-of-2 input" << endl;
+        if (this_rank == 0) {
+            cout << "\nError: please use power-of-2 processors\n" << endl;
+        }
+        return 0;
+    } else if (n % num_procs != 0) {
+        if (this_rank == 0) {
+            cout << "\nError: input size must be divisible by processor count\n" << endl;
+        }
         return 0;
     }
 
@@ -52,7 +59,7 @@ int main(int argc, char *argv[])
     }
 
     // MPI structs for send and receive calls
-    MPI_Request req; 
+    MPI_Request req;
     MPI_Status status;
 
     // one to all broadcast
@@ -76,6 +83,7 @@ int main(int argc, char *argv[])
                 size = load_size;
             }
         }
+    }
 
     // compute sums
     int sum = sum_arr(arr + ind, size);
@@ -97,7 +105,7 @@ int main(int argc, char *argv[])
         }
         mask = (mask ^ op);
     }
-   
+
    if (this_rank == 0) {
     cout << "Distributed result: " << sum << endl;
    }
